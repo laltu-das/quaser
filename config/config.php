@@ -8,18 +8,19 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'app_name' => env('APP_NAME', 'Laravel'),
+    'license_key' => env('LICENSE_KEY', 'your-default-license-key'),
+
+    'license_server_url' => env('LICENSE_SERVER_URL', 'https://example.com'),
 
     'envato' => [
-
         'item_id' => env('ENVATO_ITEM_ID'),
-
         'purchase_code' => env('ENVATO_PURCHASE_CODE'),
-
     ],
 
     'github' => [
-        'token' => env('GITHUB_TOKEN'),
+        'token' => env('GITHUB_REPOSITORY'),
+        'username' => env('GITHUB_USERNAME'),
+        'repository' => env('GITHUB_TOKEN'),
     ],
 
 
@@ -115,39 +116,6 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Installed Middleware Options
-    |--------------------------------------------------------------------------
-    | Different available status switch configuration for the
-    | canInstall middleware located in `canInstall.php`.
-    |
-    */
-    'redirect' => [
-        'route' => [
-            'name' => 'welcome',
-            'data' => [],
-        ],
-        'abort' => [
-            'type' => '404',
-        ],
-        'dump' => [
-            'data' => 'Dumping a not found message.',
-        ],
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Selected Installed Middleware Option
-    |--------------------------------------------------------------------------
-    | The selected option fo what happens when an installer instance has been
-    | Default output is to `/resources/views/error/404.blade.php` if none.
-    | The available middleware options include:
-    | route, abort, dump, 404, default, ''
-    |
-    */
-    'installedAlreadyAction' => 'route',
-
-    /*
-    |--------------------------------------------------------------------------
     | Updater Enabled
     |--------------------------------------------------------------------------
     | Can the application run the '/update' route with the migrations.
@@ -156,5 +124,4 @@ return [
     |
     */
     'updaterEnabled' => 'true',
-
 ];

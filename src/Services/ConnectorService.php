@@ -2,18 +2,25 @@
 
 namespace Laltu\Quasar\Services;
 
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Config;
-use Laltu\LaravelEnvato\Exceptions\AuthException;
+use Illuminate\Support\Facades\Http;
+use Laltu\Quasar\Exceptions\LicenseException;
+use Laltu\Quasar\Traits\CacheKeys;
 
-class LicenseConnector
+class ConnectorService
 {
-    public $license;
+    use CacheKeys;
 
-    private $licenseKey;
-    private $accessToken;
+    public string $license;
 
+    private string $licenseKey;
+    private string $accessToken;
+
+    /**
+     * @throws LicenseException
+     * @throws ConnectionException
+     */
     public function __construct(string $licenseKey)
     {
         $this->licenseKey = $licenseKey;
@@ -27,15 +34,16 @@ class LicenseConnector
      * @param array $data
      *
      * @return boolean
+     * @throws ConnectionException
      */
     public function validateLicense(array $data = []): bool
     {
         if ($this->accessToken) {
-            $url = Config::get('license-connector.license_server_url') . '/api/license-server/license';
+            $url = config('license-connector.license_server_url') . '/api/license-server/license';
 
             $response = Http::withHeaders([
-                'x-host' => Config::get('app.url'),
-                'x-host-name' => Config::get('app.name'),
+                'x-host' => config('app.url'),
+                'x-host-name' => config('app.name'),
                 'Authorization' => "Bearer {$this->accessToken}",
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
@@ -59,7 +67,8 @@ class LicenseConnector
      * @param string $licenseKey
      *
      * @return string|null
-     * @throws AuthException
+     * @throws ConnectionException
+     * @throws LicenseException
      */
     private function getAccessToken(string $licenseKey): null | string
     {
@@ -71,16 +80,14 @@ class LicenseConnector
             return $accessToken;
         }
 
-        $url = Config::get('license-connector.license_server_url') . '/api/license-server/auth/login';
+        $url = config('license-connector.license_server_url') . '/api/license-server/auth/login';
 
         $response = Http::withHeaders([
-            'x-host' => Config::get('app.url'),
-            'x-host-name' => Config::get('app.name'),
+            'x-host' => config('app.url'),
+            'x-host-name' => config('app.name'),
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-        ])->post($url, [
-            'license_key' => $licenseKey
-        ]);
+        ])->post($url, [            'license_key' => $licenseKey        ]);
 
         $data = $response->json();
 
@@ -93,22 +100,11 @@ class LicenseConnector
 
                     return $accessToken;
                 } else {
-                    throw new AuthException($data['message']);
+                    throw new LicenseException($data['message']);
                 }
             }
         }
 
-        throw new AuthException($data['message']);
-    }
-
-    /**
-     * Get access token cache key
-     *
-     * @param string $licenseKey
-     * @return string
-     */
-    private function getAccessTokenKey(string $licenseKey): string
-    {
-        return "license-connector:access-token-{$licenseKey}";
+        throw new LicenseException($data['message']);
     }
 }

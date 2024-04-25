@@ -25,7 +25,7 @@
     },
     "require-dev": {
         "orchestra/testbench": "^7.0|^8.0|^9.0",
-        "phpunit/phpunit": "^9.0|^10.4"
+        "phpunit/phpunit": "^9.0|^10.5"
     },
     "autoload": {
         "psr-4": {
@@ -74,5 +74,7 @@
                 "Quasar": "Laltu\\Quasar\\QuasarFacade"
             }
         }
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
