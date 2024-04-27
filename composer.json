@@ -20,12 +20,13 @@
         "ext-zip": "*",
         "illuminate/support": "^9.21|^10.0|^11.0",
         "inertiajs/inertia-laravel": "^1.0",
+        "jeremykendall/php-domain-parser": "^6.0",
         "knplabs/github-api": "^3.14",
         "tightenco/ziggy": "^2.1"
     },
     "require-dev": {
         "orchestra/testbench": "^7.0|^8.0|^9.0",
-        "phpunit/phpunit": "^9.0|^10.5"
+        "phpunit/phpunit": "^9.0|^10."
     },
     "autoload": {
         "psr-4": {

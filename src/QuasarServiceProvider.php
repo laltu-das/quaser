@@ -2,6 +2,8 @@
 
 namespace Laltu\Quasar;
 
+use Exception;
+use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Laltu\Quasar\Commands\InstallQuaserProject;
@@ -13,8 +15,9 @@ class QuasarServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(Router $router): void
+    public function boot(Kernel $kernel, Router $router): void
     {
+
         /*
          * Optional methods to load your package assets
          */
@@ -23,7 +26,12 @@ class QuasarServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->loadRoutesFrom(__DIR__ . '/routes.php');
 
-        $router->aliasMiddleware('license-connector', LicenseGuardMiddleware::class);
+        // Register middleware globally
+
+//        $kernel->setGlobalMiddleware([LicenseGuardMiddleware::class]);
+
+        // Register middleware globally
+//        $kernel->appendMiddlewareToGroup('web', LicenseGuardMiddleware::class);
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -67,17 +75,17 @@ class QuasarServiceProvider extends ServiceProvider
 
 
         $this->app->singleton('license-connector', function ($app) {
-        // Retrieve the license key from your application's configuration
-        $licenseKey = config('license-connector.license_key');
+            // Retrieve the license key from your application's configuration
+            $licenseKey = config('license-connector.license_key');
 
-        // Check if the license key is properly set
-        if (empty($licenseKey)) {
-            throw new \Exception("License key is not set in the configuration.");
-        }
+            // Check if the license key is properly set
+            if (empty($licenseKey)) {
+                throw new Exception("License key is not set in the configuration.");
+            }
 
-        // Return a new instance of ConnectorService with the license key
-        return new ConnectorService($licenseKey);
-    });
+            // Return a new instance of ConnectorService with the license key
+            return new ConnectorService($licenseKey);
+        });
 
     }
 }

@@ -14,6 +14,6 @@ Route::middleware('api')->prefix('api/install/')->group(function () {
     Route::post('/download-project', [InstallationController::class, 'downloadProject']);
 });
 
-Route::get('install/{view?}', IndexController::class)
-    ->where('view', '(.*)')
-    ->name('laravel-envato.layout');
+Route::view('license-invalid', 'license-invalid')->name('quaser.license.invalid');
+
+Route::get('install/{view?}', IndexController::class)->where('view', '(.*)');

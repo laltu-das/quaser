@@ -4,9 +4,14 @@ namespace Laltu\Quasar\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Laltu\Quasar\Supports\DomainSupport;
+use Pdp\CannotProcessHost;
 
 class LicenseGuardMiddleware
 {
+    /**
+     * @throws CannotProcessHost
+     */
     public function handle(Request $request, Closure $next)
     {
         $host = $request->header('_Host');
@@ -35,7 +40,6 @@ class LicenseGuardMiddleware
             }
         }
 
-        return abort(403);
-//        return $next($request);
+        return abort(403,'Invalid license');
     }
 }
