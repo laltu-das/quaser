@@ -7,6 +7,8 @@ use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Routing\Router;
 use Illuminate\Support\ServiceProvider;
 use Laltu\Quasar\Commands\InstallQuaserProject;
+use Laltu\Quasar\Http\Middleware\ApplicationInstallMiddleware;
+use Laltu\Quasar\Http\Middleware\ApplicationUpdateMiddleware;
 use Laltu\Quasar\Http\Middleware\LicenseGuardMiddleware;
 use Laltu\Quasar\Services\ConnectorService;
 
@@ -32,6 +34,9 @@ class QuasarServiceProvider extends ServiceProvider
 
         // Register middleware globally
 //        $kernel->appendMiddlewareToGroup('web', LicenseGuardMiddleware::class);
+
+//        $kernel->appendMiddlewareToGroup('web', ApplicationInstallMiddleware::class);
+//        $kernel->appendMiddlewareToGroup('web', ApplicationUpdateMiddleware::class);
 
         if ($this->app->runningInConsole()) {
             $this->publishes([

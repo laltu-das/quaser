@@ -5,6 +5,7 @@ namespace Laltu\Quasar\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Laltu\Quasar\Services\EnvironmentManager;
+use Laltu\Quasar\Services\InstallationService;
 use Laltu\Quasar\Services\PermissionsChecker;
 use Illuminate\Routing\Controller;
 use Symfony\Component\Console\Output\BufferedOutput;
@@ -53,4 +54,28 @@ class InstallationController extends Controller
 
         return response()->json(['data' => $content]);
     }
+
+    public function install(Request $request, InstallationService $installationService)
+    {
+        $request->validate([
+            'app_version' => 'required',
+            'database_name' => 'required',
+        ]);
+
+        // Prepare installation details
+        $details = [
+            'app_version' => $request->app_version,
+            'database_name' => $request->database_name,
+            'additional_info' => 'Example of installation metadata.'
+        ];
+
+        // Create or update the installed.lock file
+        $installationService->createInstallationLock($details);
+
+        // Retrieve the installation data
+        $installationData = $installationService->getInstallationData();
+
+        return response()->json(['data' => $installationData]);
+    }
+
 }
